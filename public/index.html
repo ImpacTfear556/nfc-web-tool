@@ -1,0 +1,39 @@
+<!doctype html>
+<html>
+<head>
+  <meta charset="utf-8">
+  <title>NFC Tool</title>
+</head>
+<body>
+  <h1>NFC Web Tool</h1>
+  <div id="status">Waiting for reader...</div>
+  <div id="card"></div>
+  <input id="txt" placeholder="Text to write"/>
+  <button id="write">Write</button>
+  <pre id="log"></pre>
+
+  <script>
+    const log = msg => {
+      document.getElementById('log').textContent += msg + "\n";
+    };
+    const ws = new WebSocket(`ws://${location.host}`);
+    ws.onopen = () => document.getElementById('status').textContent = 'Connected';
+    ws.onmessage = e => {
+      const m = JSON.parse(e.data);
+      if (m.type === 'card') {
+        document.getElementById('card').textContent = 'UID: ' + m.uid;
+        log('Card: ' + m.uid);
+      } else if (m.type === 'raw-data') {
+        log('Raw: ' + m.data);
+      } else if (m.type === 'ndef') {
+        log('NDEF: ' + JSON.stringify(m.records));
+      }
+    };
+
+    document.getElementById('write').onclick = () => {
+      const payload = document.getElementById('txt').value;
+      ws.send(JSON.stringify({ cmd: 'write', payload }));
+    };
+  </script>
+</body>
+</html>
