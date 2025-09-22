@@ -1,0 +1,15 @@
+{
+  "name": "nfc-web-tool",
+  "version": "1.0.0",
+  "description": "Web-based NFC read/write tool for ACR122U",
+  "main": "src/server.js",
+  "scripts": {
+    "start": "node src/server.js"
+  },
+  "dependencies": {
+    "express": "^4.19.0",
+    "ws": "^8.17.0",
+    "nfc-pcsc": "^0.8.0",
+    "ndef": "^1.1.0"
+  }
+}
